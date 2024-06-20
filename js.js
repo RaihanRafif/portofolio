@@ -231,3 +231,27 @@ closeButton.addEventListener('click', () => {
     companyName.textContent = '';
     slidesContainer.innerHTML = '';
 });
+
+//----------------------------- EMAIL HANDLER
+function sendEmail() {
+    var name = document.getElementById('name').value;
+    var email = document.getElementById('email').value;
+    var subject = document.getElementById('subject').value;
+    var message = document.getElementById('message').value;
+
+    var templateParams = {
+        from_name: name,
+        from_email: email,
+        subject: subject,
+        message: message
+    };
+
+    emailjs.send('service_smayihj', 'template_k592ylu', templateParams).then(
+        (response) => {
+            console.log('SUCCESS!', response.status, response.text);
+        },
+        (error) => {
+            console.log('FAILED...', error);
+        },
+    );
+}

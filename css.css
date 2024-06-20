@@ -21,7 +21,7 @@ body {
     padding: 0;
     line-height: 1.5;
     font-size: 16px;
-    font-family: 'Poppins' sans-serif;
+    font-family: 'Poppins',sans-serif;
 }
 
 * {
@@ -321,13 +321,15 @@ ul {
 }
 
 .aside .nav li a i {
+    height: 18px;
+    width: 16px;
     margin-right: 15px;
 }
 
 /* HOME SECTION */
-/* .main-content {
-    padding-left: 270px;
-} */
+section::-webkit-scrollbar {
+    display: none; /* Hide scrollbar */
+}
 
 
 .container {
