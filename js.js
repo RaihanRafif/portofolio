@@ -248,6 +248,7 @@ function sendEmail() {
 
     emailjs.send('service_smayihj', 'template_k592ylu', templateParams).then(
         (response) => {
+            alert("Message Sended!")
             console.log('SUCCESS!', response.status, response.text);
         },
         (error) => {
