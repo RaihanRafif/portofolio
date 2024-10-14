@@ -6,7 +6,7 @@ var typed = new Typed(".typing", {
 })
 
 const nav = document.querySelector(".nav"),
-    navList = nav.querySelectorAll("li"),
+    navList = nav.querySelectorAll("li:not(.non-nav-item)"), // Exclude new element
     totalNavList = navList.length,
     allSection = document.querySelectorAll(".section"),
     totalSection = allSection.length;
@@ -111,6 +111,12 @@ const portfolioData = [
         'company': 'Nakayama Ltd.',
         'projectName': 'Energy Monitoring System',
         'periode': '',
+        'stack': [
+            "#php",
+            "#Javascript",
+            "#ChartJs"
+        ],
+        'status': "unpublished / internal company",
         'projectReview': 'Developed an interactive website for Nakayama Company to showcase electrical energy usage data, utilizing PHP and the ChartJS library for dynamic and engaging visualizations. This solution provides real-time insights into energy consumption, enabling informed decision-making for efficient energy management',
         'projectFootage': [
             "assets/ems/ems-1.jpg",
@@ -124,6 +130,12 @@ const portfolioData = [
         'company': 'Nakayama Ltd.',
         'projectName': 'MSD700',
         'periode': '',
+        'stack': [
+            "#NextJS",
+            "#Typescript",
+            "#ROS",
+        ],
+        'status': "unpublished / internal company",
         'projectReview': 'Crafted an innovative website using Next.js and the ROS2D library, designed to display the real-time location and facilitate remote control of robots. This cutting-edge platform combines interactive mapping with intuitive control features, offering seamless operation and monitoring capabilities for robotic systems.',
         'projectFootage': [
             "assets/msd700/msd-4.png",
@@ -139,11 +151,40 @@ const portfolioData = [
         'company': 'Cakra Motor company',
         'projectName': 'Freelancer Frontend Developer',
         'periode': '',
+        'stack': [
+            "#ReactJs",
+            "#HBS",
+            "#Postgress"
+        ],
+        'status': "unpublished / internal company",
         'projectReview': 'Responsible for developing item bundling features from existing database items and creating synchronization features between company data items and those in marketplaces like Tokopedia, Shopee, and Bukalapak.',
         'projectFootage': [
             "assets/frontend.png",
         ]
     },
+    {
+        'company': 'Personal Project',
+        'projectName': 'LuxSpace - E-commerce PWA',
+        'periode': '',
+        'stack': [
+            "#PWA",
+            "#Javascript",
+            "#Vercel",
+            "#Service Workers",
+            "#Tailwind"
+        ],
+        'status': "https://porto-luxspace-pwa.vercel.app/",
+        'projectReview': 'Developed a responsive e-commerce website with Progressive Web App (PWA) capabilities to deliver a seamless online shopping experience. The platform ensures fast load times, offline functionality through service workers, and optimized performance across devices. Hosted on Vercel, it leverages Tailwind CSS for modern UI design, ensuring an intuitive and visually appealing shopping interface.',
+        'projectFootage': [
+            "assets/luxspace/luxspace-1.png",
+            "assets/luxspace/luxspace-2.png",
+            "assets/luxspace/luxspace-3.png",
+            "assets/luxspace/luxspace-4.png",
+            "assets/luxspace/luxspace-5.png",
+            "assets/luxspace/luxspace-6.png"
+        ]
+    }
+
 ];
 
 
@@ -173,6 +214,8 @@ const projectName = detailDiv.querySelector('.project-name');
 const projectReview = detailDiv.querySelector('.project-review');
 const companyName = detailDiv.querySelector('.company-name');
 const slidesContainer = detailDiv.querySelector('.slides');
+const stackContainer = detailDiv.querySelector('.container-project-stack'); // Target stack container
+
 const prevButton = detailDiv.querySelector('.prev');
 const nextButton = detailDiv.querySelector('.next');
 
@@ -187,8 +230,34 @@ portfolioItems.forEach(item => {
         projectReview.textContent = project.projectReview;
         companyName.textContent = project.company;
 
-        // Clear existing slides
+        const statusLink = detailDiv.querySelector('.status-link');
+        statusLink.textContent = project.status; // Set the status text
+
+        // Check if the status is a valid URL or "unpublished/internal"
+        const isValidUrl = project.status.startsWith("http") || project.status.startsWith("https");
+        const isInternalOrUnpublished = project.status.toLowerCase() === "unpublished" || project.status.toLowerCase() === "internal";
+
+        if (isInternalOrUnpublished) {
+            // If the status is internal or unpublished
+            statusLink.href = "#"; // Disable link
+            statusLink.style.pointerEvents = "none"; // Disable click
+            statusLink.style.color = "gray"; // Change color to indicate it's disabled
+        } else if (isValidUrl) {
+            // If the status is a valid URL
+            statusLink.href = project.status; // Set the href to the project status if it’s a link
+            statusLink.target = "_blank"; // Open link in a new tab
+            statusLink.style.pointerEvents = "auto"; // Enable click
+            statusLink.style.color = ""; // Reset color if enabled
+        } else {
+            // If the status is neither a URL nor a specific state
+            statusLink.href = "#"; // No link if the status is not a URL
+            statusLink.style.pointerEvents = "none"; // Disable click
+            statusLink.style.color = "gray"; // Change color to indicate it's disabled
+        }
+
+        // Clear existing slides and stack content
         slidesContainer.innerHTML = '';
+        stackContainer.innerHTML = ''; // Clear previous stack entries
         currentSlideIndex = 0;
 
         // Populate slides with project footage
@@ -196,10 +265,19 @@ portfolioItems.forEach(item => {
             slidesContainer.innerHTML += `<img src="${imgSrc}" alt="Slide ${idx + 1}" style="display: ${idx === 0 ? 'block' : 'none'};">`;
         });
 
+        // Populate the stack container with technology tags
+        project.stack.forEach(stackItem => {
+            const span = document.createElement('span');
+            span.className = 'skill'; // Optional CSS class for styling
+            span.textContent = stackItem;
+            stackContainer.appendChild(span);
+        });
+
         detailDiv.classList.remove('hidden');
         detailDiv.style.display = 'block';
     });
 });
+
 
 prevButton.addEventListener('click', () => {
     showSlides(currentSlideIndex - 1);
